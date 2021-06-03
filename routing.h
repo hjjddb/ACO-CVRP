@@ -1,7 +1,0 @@
-class RoutingModel {
-    enum Status {
-
-    };
-
-    
-}
