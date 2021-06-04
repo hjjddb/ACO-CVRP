@@ -59,7 +59,7 @@ def print_solution(data, manager, routing, solution, optimized_answer):
     for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id)
         plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
-        route_distance = 0
+        route_distance = 0 
         route_load = 0
         while not routing.IsEnd(index):
             node_index = manager.IndexToNode(index)
