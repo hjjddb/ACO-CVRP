@@ -8,7 +8,7 @@
 
 #include "utilities/io_utils.h"
 // #include "utilities/math_utils.h"
-#include "utilities/algorithms/ant_colony_optimize.h"
+#include "algorithms/ant_colony_optimize.h"
 
 // using namespace std;
 using std::ifstream;
@@ -26,7 +26,9 @@ using std::string;
 int main(){
   freopen("test.out", "w", stdout);
   BaseGraph graph = read_input("data/CMT01.xml");
+  ACOGraph aco_graph(graph);
+  // cout << aco_graph.saving.toString();
   // cout << graph.toString();
-  cout << aco(graph, 5, 160, 1, 1, 1, 0) << '\n';
+  cout << aco(graph, 5, 160, 1, 1, 1, 0, 100) << '\n';
   cout << "Done!\n";
 }
