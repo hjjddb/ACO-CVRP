@@ -5,7 +5,7 @@
 #include <random>
 #include <ctime>
 #include <stdio.h>
-
+#include <climits>
 #include "utilities/io_utils.h"
 // #include "utilities/math_utils.h"
 #include "algorithms/ant_colony_optimize.h"
@@ -28,7 +28,19 @@ int main(){
   BaseGraph graph = read_input("data/CMT01.xml");
   ACOGraph aco_graph(graph);
   // cout << aco_graph.saving.toString();
-  // cout << graph.toString();
-  cout << aco(graph, 5, 160, 1, 1, 1, 0, 100) << '\n';
-  cout << "Done!\n";
+  cout << graph.toString();
+  Result final_result;
+  for (int num_ants=1; num_ants<=graph.num_nodes; ++num_ants){
+    for (double alpha=0.2; alpha<=2; alpha+=0.2)
+      for (double beta=0.2; beta<=2; beta+=0.2)
+        for (double gamma=0.2; gamma<=2; gamma+=0.2)
+          for (double ro=0; ro<=1; ro+=0.2){
+            Result current_result = aco(graph, num_ants, alpha, beta, gamma, ro, 10);
+            if (current_result < final_result)
+              final_result = current_result;
+          }
+    cout << "result with " + std::to_string(num_ants) + " vehicle(s):\n";
+      cout << final_result << '\n';
+  }
+  cout << "\nFinal result: \n" << final_result << "\nDone!\n";
 }

@@ -20,11 +20,16 @@ class Path {
       trace.push_back(node);
     }
 
+    std::string to_string(){
+      std::string res = "route: ";
+      for(int i=0; i<trace.size(); ++i) res += std::to_string(trace[i].id) + " \n"[i==trace.size()-1];
+      // res += std::to_string(total_distance) + "\n";
+      return res;
+    }
+
 };
 
-std::ostream &operator << (std::ostream &cout, const Path &path){
-  std::string result = "";
-  for(int i=0; i<path.trace.size(); ++i) cout << path.trace[i].id << " \n"[i==path.trace.size()-1];
-  cout << path.total_distance << "\n";
+std::ostream &operator << (std::ostream &cout, Path &path){
+  cout << path.to_string();
   return cout;
 }

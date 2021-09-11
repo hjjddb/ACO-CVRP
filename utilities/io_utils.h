@@ -15,8 +15,10 @@ BaseGraph read_input(std::string xml_path){
              *requests = doc.first_node("instance")->first_node("requests")->first_node("request"); 
 
   vector<Node> graph_nodes; 
-  int start_node_id = -1;
-  int num_nodes = atoi(fleet->first_node("vehicle_profile")->first_node("departure_node")->value());
+  int start_node_id = -1,
+      num_nodes = atoi(fleet->first_node("vehicle_profile")->first_node("departure_node")->value()),
+      capability = atof(fleet->first_node("vehicle_profile")->first_node("capacity")->value());
+  
   for (int i=0; nodes; nodes=nodes->next_sibling(), ++i){
     double cx = atof(nodes->first_node("cx")->value()),
            cy = atof(nodes->first_node("cy")->value());
@@ -31,5 +33,6 @@ BaseGraph read_input(std::string xml_path){
   
   BaseGraph graph(graph_nodes);
   graph.start_node = graph_nodes[start_node_id];
+  graph.max_capability = capability;
   return graph;
 }

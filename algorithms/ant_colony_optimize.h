@@ -1,18 +1,62 @@
 #include "../data_structures/graph.h"
 #include "../utilities/math_utils.h"
 
+using std::cout;
 
-double aco(BaseGraph baseGraph, int num_ants, double max_capability, double alpha, double beta, double gamma, double ro, int max_trial){
+
+class Result {
+  public:
+    double total_distance;
+    vector<Path> paths;
+
+    Result(){
+      this->total_distance = LLONG_MAX;
+      paths.clear();
+    }
+
+    Result(vector<Path> paths){
+      this->total_distance = 0;
+      for (Path &path : paths)
+        this->total_distance += path.total_distance;
+      this->paths = paths;
+    }
+
+    std::string to_string() {
+      std::string res = "routers:\n";
+      for (Path &path: paths){
+        res += "\t" + path.to_string();
+      }
+      res += "total_distance " + std::to_string(total_distance);
+      return res;
+    }
+
+    bool operator < (const Result &other){
+      return this->total_distance <= other.total_distance;
+    }
+};
+
+std::ostream &operator << (std::ostream &cout, Result &result){
+  cout << result.to_string();
+  return cout;
+} 
+
+
+Result aco(BaseGraph baseGraph, int num_ants, double alpha, double beta, double gamma, double ro, int max_trial){
   int MAX_NOT_BETTER_TRY = max_trial;
 
   ACOGraph graph(baseGraph);
 
-  double result = LLONG_MAX;
+  Result result;
   int not_better_try(0);
-
   int num_trial(0);
+  cout << "Trial cofiguration:" << 
+          "\n\t num_vehicile(s): " << num_ants <<
+          "\n\t alpha: " << alpha << 
+          "\n\t beta: " << beta <<
+          "\n\t gamma: " << gamma << 
+          "\n\t ro: " << ro << '\n';
   while(not_better_try < MAX_NOT_BETTER_TRY){
-    std::cout << "Trial " << num_trial++ << '\n';
+    // cout << "Trial " << num_trial++ << '\n';
     srand(time(NULL));
     
     vector<Path> paths;
@@ -23,7 +67,7 @@ double aco(BaseGraph baseGraph, int num_ants, double max_capability, double alph
     for (int k=0; k<num_ants && num_not_visited>0; ++k){
       Path path;
       path.add_node(graph.start_node);
-      double capability = max_capability;
+      double capability = graph.max_capability;
       Node current_node = graph.start_node;
 
       while(num_not_visited>0){
@@ -50,6 +94,8 @@ double aco(BaseGraph baseGraph, int num_ants, double max_capability, double alph
 
       paths.push_back(path);
     }
+    // for (Path &path: paths)
+    //   std::cout << path << '\n';
     // Create delta matrix
     Matrix delta(graph.num_nodes, graph.num_nodes);
     for (Path &path : paths){
@@ -61,22 +107,16 @@ double aco(BaseGraph baseGraph, int num_ants, double max_capability, double alph
     // Update pheromone matrix
     graph.pheromone *= (1-ro);
     graph.pheromone += delta;
+
     // Ignore if the route is not finished
-    double current_result(0);
-    for (Path &path : paths){
-      std::cout << path;
-      current_result += path.total_distance;
-    }
-    std::cout << "Trial's total distance: " << current_result << "\n\n";
-    if (num_not_visited) continue;
     // Create result for the trial
-    // Update final result
-    std::cout << not_better_try << " " << result << " " << current_result << '\n';
-    if (result <= current_result){
+    Result current_result(paths);
+    if (result < current_result || num_not_visited){
       ++not_better_try;
       continue;
     }
-    result = current_result;
+    result = Result(paths);
+    cout << "Trial's result: \n" << current_result << "\n\n";
     not_better_try = 0;
   }
   return result;

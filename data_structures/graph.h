@@ -21,10 +21,12 @@ class BaseGraph {
     Node start_node;
     vector<Node> nodes;
     Matrix distances;
+    double max_capability;
 
     BaseGraph(){
       num_nodes = 0;
       start_node = Node();
+      max_capability= 0;
     }
 
     Matrix get_distances(vector<Node> nodes){
@@ -46,6 +48,7 @@ class BaseGraph {
     std::string toString(){
       std::string output = "";
       output += "Number of nodes: " + to_string(num_nodes) + "\n";
+      output += "Max capability: " + to_string(max_capability) + "\n";
       output += "Node list: \n";
       for(int i=0; i<nodes.size(); ++i)
         output += "\t" + nodes[i].toString();
@@ -89,6 +92,7 @@ class ACOGraph : public BaseGraph {
       nodes = graph.nodes;
       start_node = graph.start_node;
       distances = graph.distances;
+      max_capability = graph.max_capability;
       heuristic = get_heuristic();
       pheromone = get_pheromone();
       probabilities = get_probabilities();
