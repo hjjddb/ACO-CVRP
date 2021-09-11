@@ -116,7 +116,7 @@ Result aco(BaseGraph baseGraph, int num_ants, double alpha, double beta, double 
       continue;
     }
     result = Result(paths);
-    cout << "Trial's result: \n" << current_result << "\n\n";
+    // cout << "Trial's result: \n" << current_result << "\n\n";
     not_better_try = 0;
   }
   return result;
