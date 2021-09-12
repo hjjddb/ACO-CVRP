@@ -37,7 +37,7 @@ def create_data_model(file, num_vehicles):
         nodes[i].x = float(cx[i-1].firstChild.data)
         nodes[i].y = float(cy[i-1].firstChild.data)
         nodes[i].quantity = float(quantities[i-1].firstChild.data)
-    print(nodes[-1].quantity)
+    # print(nodes[-1].quantity)
     
     data = {}
     data['distance_matrix'] = [[0] * n] * n
